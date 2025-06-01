@@ -1,5 +1,5 @@
 # PROJECT REKAYASA DAN ORGANISASI SISTEM BIG DATA
-Repository ini berisi implementasi document-oriented dan columnar database pada medium streaming film untuk tugas besar MK ROBD Semester 6
+Repository ini berisi implementasi document-oriented dan columnar database pada medium streaming film untuk tugas besar MK ROBD Kelompok 9 Semester 6
 
 # DATA SOURCE
 Movie Recommendation System - Manas Parashar (Kaggle):
