@@ -1,0 +1,27 @@
+docker-compose up -d --build
+
+docker cp .\movies.json project-mongo-1:/movies.json
+docker exec project-mongo-1 mongoimport --db movie_db --collection movies --username admin --password password --authenticationDatabase admin --file /movies.json --jsonArray
+
+docker cp .\ratings.csv project-cassandra-1:/ratings.csv
+docker exec -it project-cassandra-1 cqlsh -u cassandra -p cassandra
+
+-- Create a keyspace
+CREATE KEYSPACE IF NOT EXISTS movie WITH REPLICATION = {'class': 'SimpleStrategy', 'replication_factor': 1};
+USE movie;
+
+-- Create a ratings table
+CREATE TABLE IF NOT EXISTS reviews (
+	userId int,  
+movieId int,
+  rating float,
+  PRIMARY KEY ((movieId), userId)
+);
+
+COPY movie.reviews (movieId, userId, rating) 
+FROM 'ratings.csv' 
+WITH DELIMITER=',' AND HEADER=true;
+
+docker cp .\aggregated_ratings.json project-mongo-1:/aggregated_ratings.json
+docker exec project-mongo-1 mongoimport --db movie_db --collection movie_ratings_summary --username admin --password password --authenticationDatabase admin --file /aggregated_ratings.json --jsonArray
+
